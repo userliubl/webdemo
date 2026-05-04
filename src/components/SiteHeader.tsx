@@ -1,0 +1,275 @@
+"use client";
+
+import type { MouseEvent } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { siteMeta } from "@/data/site";
+
+const nav = [
+  { id: "about", href: "/#about", label: "中心简介", hint: "了解研究中心定位与简介" },
+  { id: "research", href: "/#research", label: "研究方向", hint: "查看核心研究主题与布局" },
+  { id: "people", href: "/team", label: "团队成员", hint: "查看组织结构与骨干成员" },
+  { id: "papers", href: "/works", label: "论文和工作", hint: "查看论文成果与代表工作" },
+  { id: "footer", href: "/#footer", label: "联系合作", hint: "前往页脚查看联系方式" },
+] as const;
+
+function scrollToSectionId(id: string) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const header = document.querySelector("header");
+  const headerH = header?.getBoundingClientRect().height ?? 52;
+  const docStyle = getComputedStyle(document.documentElement);
+  const padTop = parseFloat(docStyle.scrollPaddingTop) || headerH;
+  const offset = Math.max(headerH, padTop);
+  const top = el.getBoundingClientRect().top + window.scrollY - offset;
+  window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+}
+
+function prefersFineHover() {
+  if (typeof window === "undefined") return false;
+  return window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+}
+
+/** Logo 旁标题：首页为站点名，详情页与对应页面一致 */
+function titleBesideLogo(pathname: string) {
+  if (pathname === "/works") return "论文和工作";
+  if (pathname === "/team") return "组织结构";
+  return siteMeta.title;
+}
+
+export function SiteHeader() {
+  const pathname = usePathname();
+  const brandText = titleBesideLogo(pathname);
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const shellRef = useRef<HTMLDivElement | null>(null);
+  const hoverCloseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const clearHoverCloseTimer = useCallback(() => {
+    if (hoverCloseTimerRef.current) {
+      clearTimeout(hoverCloseTimerRef.current);
+      hoverCloseTimerRef.current = null;
+    }
+  }, []);
+
+  const openMenuFromHover = useCallback(() => {
+    if (!prefersFineHover()) return;
+    clearHoverCloseTimer();
+    setMenuOpen(true);
+  }, [clearHoverCloseTimer]);
+
+  const scheduleMenuCloseFromHover = useCallback(() => {
+    if (!prefersFineHover()) return;
+    clearHoverCloseTimer();
+    hoverCloseTimerRef.current = setTimeout(() => {
+      setMenuOpen(false);
+      hoverCloseTimerRef.current = null;
+    }, 160);
+  }, [clearHoverCloseTimer]);
+
+  useEffect(() => () => clearHoverCloseTimer(), [clearHoverCloseTimer]);
+
+  const updateActive = useCallback(() => {
+    setScrolled(window.scrollY > 6);
+    if (pathname === "/team") {
+      setActiveId("people");
+      return;
+    }
+    if (pathname === "/works") {
+      setActiveId("papers");
+      return;
+    }
+    if (pathname !== "/") {
+      setActiveId(null);
+      return;
+    }
+    const docStyle = getComputedStyle(document.documentElement);
+    const padTop = parseFloat(docStyle.scrollPaddingTop);
+    const headerOffset = Number.isFinite(padTop) ? padTop : 52;
+    const y = window.scrollY + headerOffset;
+    if (window.scrollY < 72) {
+      setActiveId(null);
+      return;
+    }
+    let current: string | null = null;
+    for (const item of nav) {
+      const el = document.getElementById(item.id);
+      if (el) {
+        const top = el.getBoundingClientRect().top + window.scrollY;
+        if (top <= y) current = item.id;
+      }
+    }
+    setActiveId(current);
+  }, [pathname]);
+
+  useEffect(() => {
+    updateActive();
+    window.addEventListener("scroll", updateActive, { passive: true });
+    window.addEventListener("resize", updateActive, { passive: true });
+    window.addEventListener("hashchange", updateActive);
+    return () => {
+      window.removeEventListener("scroll", updateActive);
+      window.removeEventListener("resize", updateActive);
+      window.removeEventListener("hashchange", updateActive);
+    };
+  }, [updateActive]);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [menuOpen]);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onPointerDown = (e: PointerEvent) => {
+      if (!shellRef.current?.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => document.removeEventListener("pointerdown", onPointerDown);
+  }, [menuOpen]);
+
+  const closeMenu = useCallback(() => {
+    clearHoverCloseTimer();
+    setMenuOpen(false);
+  }, [clearHoverCloseTimer]);
+
+  const handleNavLinkClick = useCallback(
+    (e: MouseEvent<HTMLAnchorElement>, item: (typeof nav)[number]) => {
+      clearHoverCloseTimer();
+      closeMenu();
+      if (item.href.startsWith("/#") && pathname === "/") {
+        e.preventDefault();
+        const id = item.href.slice(2);
+        window.history.pushState(null, "", item.href);
+        requestAnimationFrame(() => {
+          scrollToSectionId(id);
+        });
+      }
+    },
+    [clearHoverCloseTimer, closeMenu, pathname],
+  );
+
+  /** 下拉项：白底深字，避免与顶栏浅色背景混用白字导致看不见 */
+  const itemClass = (id: string) => {
+    const active = activeId === id;
+    return [
+      "group flex origin-left items-start justify-between gap-3 rounded-xl px-3 py-3 outline-none transition duration-200",
+      "motion-reduce:transition-colors",
+      "hover:scale-[1.02] motion-reduce:hover:scale-100",
+      "focus-visible:ring-2 focus-visible:ring-imu-highlight focus-visible:ring-offset-2 focus-visible:ring-offset-white",
+      active
+        ? "bg-imu-50 text-imu-950 ring-1 ring-imu-highlight/45"
+        : "text-slate-800 hover:bg-slate-50 active:bg-slate-100",
+    ].join(" ");
+  };
+
+  return (
+    <header
+      className={`sticky top-0 z-50 border-b border-slate-200/90 bg-white/95 font-sans text-slate-900 antialiased backdrop-blur-md transition-[box-shadow] duration-300 ${
+        scrolled ? "shadow-md shadow-slate-300/35" : "shadow-sm shadow-slate-200/40"
+      }`}
+    >
+      <div ref={shellRef} className="mx-auto max-w-5xl px-4 sm:px-6">
+        <div className="flex h-[52px] items-center justify-between gap-3">
+          <Link
+            href="/"
+            onClick={closeMenu}
+            className="flex min-w-0 max-w-[min(100%,14rem)] items-center gap-2.5 text-slate-900 transition hover:text-imu-brand-deep active:scale-[0.99] sm:max-w-none sm:gap-3"
+            aria-label={`进入${siteMeta.title}首页`}
+          >
+            <Image
+              src={siteMeta.logoSrc}
+              alt={siteMeta.logoAlt}
+              width={160}
+              height={48}
+              className="h-8 w-auto shrink-0 object-contain object-left sm:h-9"
+              priority
+            />
+            <span
+              key={pathname}
+              className="truncate text-sm font-semibold tracking-tight transition-colors duration-200 sm:text-[15px] sm:leading-snug"
+            >
+              {brandText}
+            </span>
+          </Link>
+
+          <div
+            className="relative shrink-0"
+            onMouseEnter={openMenuFromHover}
+            onMouseLeave={scheduleMenuCloseFromHover}
+          >
+            <button
+              type="button"
+              className={`inline-flex h-10 w-10 items-center justify-center rounded-full border text-slate-800 transition duration-300 hover:scale-105 motion-reduce:hover:scale-100 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-imu-highlight focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
+                menuOpen
+                  ? "border-imu-highlight/50 bg-imu-50 shadow-md shadow-imu-brand/10"
+                  : "border-slate-300/90 bg-white hover:border-imu-highlight/40 hover:bg-slate-50"
+              }`}
+              aria-expanded={menuOpen}
+              aria-controls="site-nav-dropdown"
+              aria-haspopup="true"
+              aria-label="主导航菜单（桌面端悬停展开，触屏可点击切换）"
+              onClick={() => {
+                clearHoverCloseTimer();
+                setMenuOpen((o) => !o);
+              }}
+            >
+              <svg
+                width="19"
+                height="19"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                aria-hidden
+                className={`transition-transform duration-300 ${menuOpen ? "rotate-90" : ""}`}
+              >
+                <path d="M4 7h16M4 12h16M4 17h16" strokeLinecap="round" />
+              </svg>
+            </button>
+
+            <div
+              id="site-nav-dropdown"
+              aria-hidden={!menuOpen}
+              inert={!menuOpen ? true : undefined}
+              className={`absolute right-0 top-[calc(100%-10px)] z-50 w-[min(21rem,calc(100vw-2rem))] origin-top-right rounded-2xl border border-slate-200 bg-white px-2.5 pb-2.5 pt-4 text-slate-900 shadow-2xl shadow-slate-400/25 transition duration-300 motion-reduce:transition-opacity ${
+                menuOpen
+                  ? "translate-y-0 scale-100 opacity-100"
+                  : "pointer-events-none -translate-y-2 scale-[0.92] opacity-0 motion-reduce:translate-y-0 motion-reduce:scale-100"
+              }`}
+            >
+              <nav className="flex flex-col gap-1" aria-label="页面导航">
+                {nav.map((item, index) => (
+                  <Link
+                    key={item.id}
+                    href={item.href}
+                    className={`${itemClass(item.id)} [animation-delay:${index * 35}ms] ${
+                      menuOpen ? "animate-[fadeInUp_320ms_ease-out_both]" : ""
+                    }`}
+                    onClick={(e) => handleNavLinkClick(e, item)}
+                  >
+                    <div className="min-w-0">
+                      <div className="text-sm font-semibold text-slate-900">{item.label}</div>
+                      <div className="mt-1 text-xs leading-relaxed text-slate-500 transition group-hover:text-slate-600">
+                        {item.hint}
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+}
