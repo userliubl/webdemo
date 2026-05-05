@@ -1,6 +1,11 @@
-import { hero } from "@/data/site";
+"use client";
+
+import { useLocale } from "@/i18n/LocaleProvider";
 
 export function Hero() {
+  const { dict } = useLocale();
+  const { hero, ctas } = dict;
+
   return (
     <section
       id="top"
@@ -41,13 +46,13 @@ export function Hero() {
             href="#people"
             className="inline-flex rounded border border-white px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-white/10"
           >
-            认识团队
+            {ctas.meetTeam}
           </a>
           <a
             href="#papers"
             className="inline-flex rounded bg-imu-highlight px-5 py-2.5 text-sm font-medium text-white shadow-md transition hover:brightness-110"
           >
-            论文成果
+            {ctas.publications}
           </a>
         </div>
       </div>

@@ -1,19 +1,25 @@
+"use client";
+
 import Link from "next/link";
 import { Section } from "@/components/Section";
-import { papers } from "@/data/site";
+import { useLocale } from "@/i18n/LocaleProvider";
 
 export function PaperList() {
+  const { dict } = useLocale();
+  const { works, eyebrows, ctas } = dict;
+  const papers = works.papers;
+
   return (
     <Section
       id="papers"
-      title="论文和工作"
-      eyebrow="Publications & Work"
+      title={works.pageTitle}
+      eyebrow={eyebrows.publications}
       action={
         <Link
           href="/works"
           className="inline-flex rounded border border-imu-brand/20 bg-white/90 px-4 py-2 text-sm font-medium text-imu-brand-deep transition hover:border-imu-highlight/60 hover:text-imu-brand"
         >
-          更多
+          {ctas.more}
         </Link>
       }
     >

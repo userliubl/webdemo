@@ -4,16 +4,13 @@ import type { MouseEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { siteMeta } from "@/data/site";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { siteAssets } from "@/data/site";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { useLocale } from "@/i18n/LocaleProvider";
+import type { Dictionary } from "@/i18n/types";
 
-const nav = [
-  { id: "about", href: "/#about", label: "中心简介", hint: "了解研究中心定位与简介" },
-  { id: "research", href: "/#research", label: "研究方向", hint: "查看核心研究主题与布局" },
-  { id: "people", href: "/team", label: "团队成员", hint: "查看组织结构与骨干成员" },
-  { id: "papers", href: "/works", label: "论文和工作", hint: "查看论文成果与代表工作" },
-  { id: "footer", href: "/#footer", label: "联系合作", hint: "前往页脚查看联系方式" },
-] as const;
+type NavItem = Dictionary["nav"]["items"][number];
 
 function scrollToSectionId(id: string) {
   const el = document.getElementById(id);
@@ -32,16 +29,11 @@ function prefersFineHover() {
   return window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 }
 
-/** Logo 旁标题：首页为站点名，详情页与对应页面一致 */
-function titleBesideLogo(pathname: string) {
-  if (pathname === "/works") return "论文和工作";
-  if (pathname === "/team") return "组织结构";
-  return siteMeta.title;
-}
-
 export function SiteHeader() {
   const pathname = usePathname();
-  const brandText = titleBesideLogo(pathname);
+  const { dict } = useLocale();
+  const nav = useMemo<readonly NavItem[]>(() => dict.nav.items, [dict]);
+  const brandText = dict.nav.titleByPath[pathname] ?? dict.meta.title;
   const [activeId, setActiveId] = useState<string | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -103,7 +95,7 @@ export function SiteHeader() {
       }
     }
     setActiveId(current);
-  }, [pathname]);
+  }, [pathname, nav]);
 
   useEffect(() => {
     updateActive();
@@ -143,7 +135,7 @@ export function SiteHeader() {
   }, [clearHoverCloseTimer]);
 
   const handleNavLinkClick = useCallback(
-    (e: MouseEvent<HTMLAnchorElement>, item: (typeof nav)[number]) => {
+    (e: MouseEvent<HTMLAnchorElement>, item: NavItem) => {
       clearHoverCloseTimer();
       closeMenu();
       if (item.href.startsWith("/#") && pathname === "/") {
@@ -184,23 +176,26 @@ export function SiteHeader() {
             href="/"
             onClick={closeMenu}
             className="flex min-w-0 max-w-[min(100%,14rem)] items-center gap-2.5 text-slate-900 transition hover:text-imu-brand-deep active:scale-[0.99] sm:max-w-none sm:gap-3"
-            aria-label={`进入${siteMeta.title}首页`}
+            aria-label={dict.meta.title}
           >
             <Image
-              src={siteMeta.logoSrc}
-              alt={siteMeta.logoAlt}
+              src={siteAssets.logoSrc}
+              alt={dict.meta.logoAlt}
               width={160}
               height={48}
               className="h-8 w-auto shrink-0 object-contain object-left sm:h-9"
               priority
             />
             <span
-              key={pathname}
+              key={`${pathname}-${dict.meta.title}`}
               className="truncate text-sm font-semibold tracking-tight transition-colors duration-200 sm:text-[15px] sm:leading-snug"
             >
               {brandText}
             </span>
           </Link>
+
+          <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-3">
+            <LanguageSwitcher className="hidden sm:inline-flex" />
 
           <div
             className="relative shrink-0"
@@ -217,7 +212,7 @@ export function SiteHeader() {
               aria-expanded={menuOpen}
               aria-controls="site-nav-dropdown"
               aria-haspopup="true"
-              aria-label="主导航菜单（桌面端悬停展开，触屏可点击切换）"
+              aria-label={dict.meta.title}
               onClick={() => {
                 clearHoverCloseTimer();
                 setMenuOpen((o) => !o);
@@ -247,7 +242,7 @@ export function SiteHeader() {
                   : "pointer-events-none -translate-y-2 scale-[0.92] opacity-0 motion-reduce:translate-y-0 motion-reduce:scale-100"
               }`}
             >
-              <nav className="flex flex-col gap-1" aria-label="页面导航">
+              <nav className="flex flex-col gap-1" aria-label={dict.meta.title}>
                 {nav.map((item, index) => (
                   <Link
                     key={item.id}
@@ -265,8 +260,13 @@ export function SiteHeader() {
                     </div>
                   </Link>
                 ))}
+                <div className="mt-2 flex items-center justify-between gap-2 border-t border-slate-200 pt-3 sm:hidden">
+                  <span className="text-xs text-slate-500">{dict.language.switcherLabel}</span>
+                  <LanguageSwitcher />
+                </div>
               </nav>
             </div>
+          </div>
           </div>
         </div>
       </div>

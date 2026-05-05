@@ -1,7 +1,7 @@
-import type { Person } from "@/data/site";
+import type { DictPerson } from "@/i18n/types";
 
 type MemberCardProps = {
-  person: Person;
+  person: DictPerson;
   featured?: boolean;
 };
 
