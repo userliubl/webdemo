@@ -1,6 +1,5 @@
 "use client";
 
-import { AmbientBackground } from "@/components/AmbientBackground";
 import { SiteFooter } from "@/components/SiteFooter";
 import { useLocale } from "@/i18n/LocaleProvider";
 
@@ -9,22 +8,12 @@ export default function WorksPageClient() {
   const { works, eyebrows } = dict;
 
   return (
-    <div className="relative isolate min-h-screen overflow-x-clip bg-transparent">
-      <AmbientBackground />
-
+    <div className="relative isolate min-h-screen overflow-x-clip bg-noise-subtle">
       <main>
-        <section className="relative overflow-hidden border-b border-white/10 bg-hero-imu bg-cover bg-center px-4 pb-14 pt-14 sm:px-6 sm:pb-16 sm:pt-20">
+        <section className="relative overflow-hidden border-b border-white/10 bg-hero-imu bg-cover bg-center px-4 pb-14 pt-14 shadow-[inset_0_8px_16px_-8px_rgba(0,0,0,0.15)] sm:px-6 sm:pb-16 sm:pt-20">
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0 bg-[size:40px_40px] bg-grid-on-brand opacity-90"
-          />
-          <div
-            aria-hidden
-            className="pointer-events-none absolute left-[8%] top-12 h-44 w-44 rounded-full bg-white/12 blur-3xl"
-          />
-          <div
-            aria-hidden
-            className="pointer-events-none absolute right-[8%] top-[25%] h-36 w-36 rounded-full bg-imu-highlight/30 blur-3xl"
           />
 
           <div className="relative mx-auto max-w-5xl">
@@ -40,7 +29,7 @@ export default function WorksPageClient() {
           </div>
         </section>
 
-        <section className="relative border-b border-slate-200/80 bg-slate-50/78 px-4 py-14 backdrop-blur-[2px] sm:px-6 sm:py-16">
+        <section className="relative border-b border-slate-200/80 bg-light-photo bg-cover bg-center px-4 py-14 shadow-[inset_0_6px_12px_-6px_rgba(15,23,42,0.04)] sm:px-6 sm:py-16">
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_18%,rgba(4,107,167,0.065),transparent_18%),radial-gradient(circle_at_88%_82%,rgba(4,107,167,0.05),transparent_22%)]"

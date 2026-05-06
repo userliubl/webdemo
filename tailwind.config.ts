@@ -46,6 +46,8 @@ const config: Config = {
       backgroundImage: {
         "grid-faint":
           "linear-gradient(to right, rgba(15, 23, 42, 0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(15, 23, 42, 0.06) 1px, transparent 1px)",
+        "dot-subtle":
+          "radial-gradient(rgba(15, 23, 42, 0.08) 0.5px, transparent 0.5px)",
         "grid-on-brand":
           "linear-gradient(to right, rgba(255,255,255,0.07) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.07) 1px, transparent 1px)",
         /** 顶部 Hero 横幅：背景图 + 品牌蓝叠层（保留可读性，且呈现学术蓝调） */
@@ -57,6 +59,9 @@ const config: Config = {
         /** 页脚更深一层，保持品牌色但更沉稳 */
         "brand-darker-photo":
           "linear-gradient(180deg, rgba(2,71,114,0.93), rgba(2,71,114,0.97)), url('/background/bg.avif')",
+        /** 浅色区块：半透明白色遮罩 + SIRC 水印底图（模仿 brand-photo 方式） */
+        "light-photo":
+          "linear-gradient(180deg, rgba(248,250,252,0.55), rgba(241,245,249,0.6)), url('/background/bg.png')",
       },
       boxShadow: {
         card: "0 1px 3px rgba(15, 23, 42, 0.06), 0 4px 12px rgba(15, 23, 42, 0.04)",

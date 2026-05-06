@@ -16,14 +16,6 @@ export function Hero() {
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute left-[-8%] top-10 h-48 w-48 rounded-full bg-white/12 blur-3xl [animation:floatY_18s_ease-in-out_infinite]"
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none absolute right-[8%] top-[22%] h-40 w-40 rounded-full bg-imu-highlight/35 blur-3xl [animation:floatY_22s_ease-in-out_infinite_reverse]"
-        aria-hidden
-      />
-      <div
         className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.18),transparent_65%)]"
         aria-hidden
       />

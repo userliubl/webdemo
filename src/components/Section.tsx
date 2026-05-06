@@ -15,8 +15,8 @@ export function Section({ id, title, eyebrow, variant = "light", action, childre
   const isBrand = variant === "brand";
 
   const shell = isBrand
-    ? "relative border-b border-white/10 bg-brand-photo bg-cover bg-center px-4 py-14 sm:px-6 sm:py-16"
-    : "relative border-b border-slate-200/80 bg-slate-50/78 px-4 py-14 backdrop-blur-[2px] sm:px-6 sm:py-16";
+    ? "relative border-b border-white/10 bg-brand-photo bg-cover bg-center px-4 py-14 shadow-[inset_0_8px_16px_-8px_rgba(0,0,0,0.15)] sm:px-6 sm:py-16"
+    : "relative border-b border-slate-200/80 bg-light-photo bg-cover bg-center bg-[size:20px_20px] bg-dot-subtle px-4 py-14 shadow-[inset_0_6px_12px_-6px_rgba(15,23,42,0.04)] sm:px-6 sm:py-16"
 
   const eyebrowCls = isBrand ? "text-white/65" : "text-imu-brand-deep";
   const titleCls = isBrand ? "text-white" : "text-slate-900";

@@ -1,4 +1,3 @@
-import { AmbientBackground } from "@/components/AmbientBackground";
 import { AboutBlock } from "@/components/AboutBlock";
 import { Hero } from "@/components/Hero";
 import { PaperList } from "@/components/PaperList";
@@ -8,9 +7,8 @@ import { TeamGrid } from "@/components/TeamGrid";
 
 export default function Home() {
   return (
-    <div className="relative isolate min-h-screen overflow-x-clip bg-transparent">
-      <AmbientBackground />
-      <main className="relative">
+    <div className="relative isolate min-h-screen overflow-x-clip bg-noise-subtle">
+      <main className="relative z-10">
         <Hero />
         <AboutBlock />
         <ResearchGrid />
