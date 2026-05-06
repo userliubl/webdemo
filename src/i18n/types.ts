@@ -135,4 +135,12 @@ export type Dictionary = {
     relatedLinks: Array<{ label: string; href: string }>;
   };
   backToTop: string;
+  notFound: {
+    pageTitle: string;
+    pageDescription: string;
+    eyebrow: string;
+    title: string;
+    description: string;
+    homeCta: string;
+  };
 };

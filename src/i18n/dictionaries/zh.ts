@@ -240,6 +240,14 @@ export const zh: Dictionary = {
     ],
   },
   backToTop: "回到顶部",
+  notFound: {
+    pageTitle: "页面未找到",
+    pageDescription: "您访问的链接可能已失效，或所输入的网址在本站不存在。",
+    eyebrow: "404",
+    title: "页面未找到",
+    description: "看起来您点击了一个失效的链接，或输入了本站不存在的网址。",
+    homeCta: "返回首页",
+  },
 };
 
 zh.team.committee = [zh.people.list[1], zh.people.list[2]];
