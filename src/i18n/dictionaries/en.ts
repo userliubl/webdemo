@@ -246,6 +246,16 @@ export const en: Dictionary = {
     ],
   },
   backToTop: "Back to top",
+  notFound: {
+    pageTitle: "Page not found",
+    pageDescription:
+      "Looks like you've followed a broken link or entered a URL that doesn't exist on this site.",
+    eyebrow: "404",
+    title: "Page not found",
+    description:
+      "Looks like you've followed a broken link or entered a URL that doesn't exist on this site.",
+    homeCta: "Back to home",
+  },
 };
 
 en.team.committee = [en.people.list[1], en.people.list[2]];
