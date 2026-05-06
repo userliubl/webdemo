@@ -61,7 +61,7 @@ const config: Config = {
           "linear-gradient(180deg, rgba(2,71,114,0.93), rgba(2,71,114,0.97)), url('/background/bg.avif')",
         /** 浅色区块：半透明白色遮罩 + SIRC 水印底图（模仿 brand-photo 方式） */
         "light-photo":
-          "linear-gradient(180deg, rgba(248,250,252,0.55), rgba(241,245,249,0.6)), url('/background/bg.png')",
+          "linear-gradient(180deg, rgba(248,250,252,0.7), rgba(241,245,249,0.75)), url('/background/bg.png')",
       },
       boxShadow: {
         card: "0 1px 3px rgba(15, 23, 42, 0.06), 0 4px 12px rgba(15, 23, 42, 0.04)",
