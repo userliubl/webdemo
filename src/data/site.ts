@@ -3,5 +3,5 @@
  * 文案统一移到 src/i18n/dictionaries 下，按 locale 提供。
  */
 export const siteAssets = {
-  logoSrc: "/logos/image.png",
+  logoSrc: "/logos/imu-sirc.png",
 };

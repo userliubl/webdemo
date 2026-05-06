@@ -7,6 +7,8 @@ const nextConfig: NextConfig = {
   trailingSlash: true,
   /** 静态导出无法使用 next/image 运行时优化，必须降级为普通 <img>。 */
   images: { unoptimized: true },
+  /** 允许局域网其他设备访问开发服务器 */
+  allowedDevOrigins: ["10.102.177.170"],
 };
 
 export default nextConfig;
