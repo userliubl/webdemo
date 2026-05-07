@@ -4,9 +4,7 @@ type SectionProps = {
   id: string;
   title: string;
   eyebrow?: string;
-  /** light：浅灰底（正文区）；brand：官网「学术·科研」式深蓝底 */
   variant?: "light" | "brand";
-  /** 区块标题右侧操作（如「查看更多」） */
   action?: ReactNode;
   children: ReactNode;
 };
@@ -15,39 +13,60 @@ export function Section({ id, title, eyebrow, variant = "light", action, childre
   const isBrand = variant === "brand";
 
   const shell = isBrand
-    ? "relative border-b border-white/10 bg-brand-photo bg-cover bg-center px-4 py-14 shadow-[inset_0_8px_16px_-8px_rgba(0,0,0,0.15)] sm:px-6 sm:py-16"
-    : "relative border-b border-slate-200/80 bg-light-photo bg-cover bg-center bg-[size:20px_20px] bg-dot-subtle px-4 py-14 shadow-[inset_0_6px_12px_-6px_rgba(15,23,42,0.04)] sm:px-6 sm:py-16"
+    ? "relative border-b border-white/[0.07] bg-brand-photo bg-cover bg-center px-4 py-16 shadow-[inset_0_6px_14px_-6px_rgba(0,0,0,0.18)] sm:px-6 sm:py-20"
+    : "relative border-b border-slate-200/70 bg-light-photo bg-cover bg-center bg-[size:20px_20px] bg-dot-subtle px-4 py-16 sm:px-6 sm:py-20 horizon-line";
 
-  const eyebrowCls = isBrand ? "text-white/65" : "text-imu-brand-deep";
+  const eyebrowCls = isBrand ? "text-white/60" : "text-imu-brand/70";
   const titleCls = isBrand ? "text-white" : "text-slate-900";
-  /** 浅底用主色竖条；品牌深蓝底上若仍用 imu-highlight 会与背景融在一起，改用浅色条保证对比 */
-  const barCls = isBrand ? "border-l-[3px] border-white/90" : "border-l-[3px] border-imu-highlight";
+  const barCls = isBrand
+    ? "border-l-[3px] border-amber-DEFAULT/80"
+    : "border-l-[3px] border-imu-highlight";
 
   const heading = (
-    <div className={`max-w-2xl ${barCls} pl-[1.125rem]`}>
+    <div className={`max-w-2xl ${barCls} pl-4`}>
       {eyebrow ? (
-        <p className={`mb-1 font-mono text-xs uppercase tracking-widest ${eyebrowCls}`}>{eyebrow}</p>
+        <p className={`mb-1.5 font-mono text-[11px] font-medium uppercase tracking-[0.2em] ${eyebrowCls}`}>
+          {eyebrow}
+        </p>
       ) : null}
-      <h2 className={`text-2xl font-semibold tracking-tight sm:text-3xl ${titleCls}`}>{title}</h2>
+      <h2 className={`text-2xl font-bold tracking-tight sm:text-3xl ${titleCls}`}>
+        {title}
+      </h2>
     </div>
   );
 
   return (
     <section id={id} className={shell}>
+      {/* Ambient corner glows for light variant */}
       {!isBrand ? (
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_18%,rgba(4,107,167,0.065),transparent_18%),radial-gradient(circle_at_88%_82%,rgba(4,107,167,0.05),transparent_22%)]"
-        />
-      ) : null}
+        <>
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_10%_15%,rgba(4,107,167,0.05),transparent_25%),radial-gradient(circle_at_90%_85%,rgba(200,138,61,0.04),transparent_25%)]"
+          />
+        </>
+      ) : (
+        <>
+          {/* Brand variant atmospheric highlights */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute left-0 top-1/4 h-48 w-48 rounded-full bg-white/[0.03] blur-3xl"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute right-0 top-2/3 h-36 w-36 rounded-full bg-amber-light/[0.06] blur-3xl"
+          />
+        </>
+      )}
+
       <div className="mx-auto max-w-5xl">
         {action ? (
-          <div className="mb-9 flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between sm:gap-8">
+          <div className="mb-10 flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between sm:gap-8">
             <div className="min-w-0 flex-1">{heading}</div>
             <div className="shrink-0 sm:max-w-[40%] sm:pt-1 sm:text-right">{action}</div>
           </div>
         ) : (
-          <div className="mb-9">{heading}</div>
+          <div className="mb-10">{heading}</div>
         )}
         {children}
       </div>

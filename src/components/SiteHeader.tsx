@@ -150,24 +150,25 @@ export function SiteHeader() {
     [clearHoverCloseTimer, closeMenu, pathname],
   );
 
-  /** 下拉项：白底深字，避免与顶栏浅色背景混用白字导致看不见 */
   const itemClass = (id: string) => {
     const active = activeId === id;
     return [
-      "group flex origin-left items-start justify-between gap-3 rounded-xl px-3 py-3 outline-none transition duration-200",
+      "group flex origin-left items-start justify-between gap-3 rounded-xl px-3 py-3 outline-none transition-all duration-200",
       "motion-reduce:transition-colors",
-      "hover:scale-[1.02] motion-reduce:hover:scale-100",
+      "hover:scale-[1.01] motion-reduce:hover:scale-100",
       "focus-visible:ring-2 focus-visible:ring-imu-highlight focus-visible:ring-offset-2 focus-visible:ring-offset-white",
       active
-        ? "bg-imu-50 text-imu-950 ring-1 ring-imu-highlight/45"
+        ? "bg-imu-50 text-imu-950 ring-1 ring-imu-highlight/30"
         : "text-slate-800 hover:bg-slate-50 active:bg-slate-100",
     ].join(" ");
   };
 
   return (
     <header
-      className={`sticky top-0 z-50 border-b border-slate-200/90 bg-white/95 font-sans text-slate-900 antialiased backdrop-blur-md transition-[box-shadow] duration-300 ${
-        scrolled ? "shadow-md shadow-slate-300/35" : "shadow-sm shadow-slate-200/40"
+      className={`sticky top-0 z-50 border-b bg-white/90 font-sans text-slate-900 antialiased backdrop-blur-xl transition-all duration-300 ${
+        scrolled
+          ? "border-slate-200/70 shadow-lg shadow-slate-300/20"
+          : "border-transparent shadow-none"
       }`}
     >
       <div ref={shellRef} className="mx-auto max-w-5xl px-4 sm:px-6">
@@ -204,10 +205,10 @@ export function SiteHeader() {
           >
             <button
               type="button"
-              className={`inline-flex h-10 w-10 items-center justify-center rounded-full border text-slate-800 transition duration-300 hover:scale-105 motion-reduce:hover:scale-100 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-imu-highlight focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
+              className={`inline-flex h-10 w-10 items-center justify-center rounded-full border text-slate-700 transition-all duration-300 hover:scale-105 motion-reduce:hover:scale-100 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-imu-highlight focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
                 menuOpen
-                  ? "border-imu-highlight/50 bg-imu-50 shadow-md shadow-imu-brand/10"
-                  : "border-slate-300/90 bg-white hover:border-imu-highlight/40 hover:bg-slate-50"
+                  ? "border-imu-highlight/40 bg-imu-50 shadow-md"
+                  : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50"
               }`}
               aria-expanded={menuOpen}
               aria-controls="site-nav-dropdown"
@@ -236,7 +237,7 @@ export function SiteHeader() {
               id="site-nav-dropdown"
               aria-hidden={!menuOpen}
               inert={!menuOpen ? true : undefined}
-              className={`absolute right-0 top-[calc(100%-10px)] z-50 w-[min(21rem,calc(100vw-2rem))] origin-top-right rounded-2xl border border-slate-200 bg-white px-2.5 pb-2.5 pt-4 text-slate-900 shadow-2xl shadow-slate-400/25 transition duration-300 motion-reduce:transition-opacity ${
+              className={`absolute right-0 top-[calc(100%-6px)] z-50 w-[min(21rem,calc(100vw-2rem))] origin-top-right rounded-2xl border border-slate-200/80 bg-white/95 px-2.5 pb-2.5 pt-4 text-slate-900 shadow-2xl shadow-slate-400/20 backdrop-blur-xl transition-all duration-300 motion-reduce:transition-opacity ${
                 menuOpen
                   ? "translate-y-0 scale-100 opacity-100"
                   : "pointer-events-none -translate-y-2 scale-[0.92] opacity-0 motion-reduce:translate-y-0 motion-reduce:scale-100"

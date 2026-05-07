@@ -16,7 +16,7 @@ export function LanguageSwitcher({ compact = true, className = "" }: Props) {
     <div
       role="group"
       aria-label={dict.language.switcherLabel}
-      className={`inline-flex items-center rounded-full border border-slate-300/90 bg-white p-0.5 text-xs font-medium text-slate-700 shadow-sm ${className}`}
+      className={`inline-flex items-center rounded-full border border-slate-200 bg-white/80 p-0.5 text-xs font-medium text-slate-600 shadow-sm backdrop-blur-sm ${className}`}
     >
       {LOCALES.map((code: Locale) => {
         const active = code === locale;
@@ -27,12 +27,12 @@ export function LanguageSwitcher({ compact = true, className = "" }: Props) {
             onClick={() => setLocale(code)}
             aria-pressed={active}
             title={LOCALE_LABELS[code].native}
-            className={`rounded-full px-2.5 transition duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-imu-highlight focus-visible:ring-offset-1 focus-visible:ring-offset-white ${
-              compact ? "py-1" : "py-1.5"
+            className={`rounded-full px-3 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-imu-highlight focus-visible:ring-offset-1 focus-visible:ring-offset-white ${
+              compact ? "py-1.5" : "py-2"
             } ${
               active
-                ? "bg-imu-50 text-imu-brand-deep ring-1 ring-imu-highlight/40"
-                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                ? "bg-imu-50 text-imu-brand-deep ring-1 ring-imu-highlight/30 shadow-sm"
+                : "text-slate-500 hover:bg-slate-100 hover:text-slate-800"
             }`}
           >
             {LOCALE_LABELS[code].short}
